@@ -146,7 +146,7 @@ This project was built as a **real low-level Windows systems project**, not just
 ### How to Run
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/vizhnudotexe/ViperLite.git
+   git clone https://github.com/vizhnudotexe/RazeLess.git
    ```
 2. **Build the project**:
    Open a terminal in the project root and run:
