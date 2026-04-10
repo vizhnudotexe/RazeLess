@@ -1,0 +1,120 @@
+<UserControl x:Class="DeathAdderManager.LightingPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{StaticResource BgDeepBrush}">
+    <ScrollViewer Padding="40" VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <!-- Left Column -->
+                <StackPanel Grid.Column="0">
+                    
+                    <!-- BRIGHTNESS CARD -->
+                    <Border Style="{StaticResource Card}" CornerRadius="4" Padding="20" Background="{StaticResource BgCardBrush}" BorderThickness="0" Margin="0,0,0,20">
+                        <Grid>
+                            <Border Width="16" Height="16" HorizontalAlignment="Right" VerticalAlignment="Top" CornerRadius="8" Background="#333333" Cursor="Help">
+                                <TextBlock Text="?" Foreground="{StaticResource TextSecBrush}" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+                            </Border>
+                            <StackPanel>
+                                <CheckBox Style="{StaticResource SynapseToggleSwitch}" 
+                                          Content="BRIGHTNESS" 
+                                          IsChecked="{Binding IsLightingOn}"/>
+                                
+                                <Grid Margin="0,30,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="0" Foreground="{StaticResource TextPrimBrush}" FontSize="11" VerticalAlignment="Bottom" Margin="0,0,10,0"/>
+                                    <StackPanel Grid.Column="1">
+                                        <Border Background="{StaticResource AccentBrush}" CornerRadius="2" Padding="6,2" HorizontalAlignment="Center" Margin="0,0,0,5" Visibility="{Binding IsLightingOn, Converter={StaticResource BoolToVisibility}}">
+                                            <TextBlock Text="{Binding Brightness}" Foreground="Black" FontSize="11" FontWeight="SemiBold"/>
+                                        </Border>
+                                        <Slider Minimum="0" Maximum="100" Value="{Binding Brightness, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Foreground="{StaticResource AccentBrush}" IsEnabled="{Binding IsLightingOn}">
+                                            <Slider.Style>
+                                                <Style TargetType="Slider" BasedOn="{StaticResource SynapseDpiSlider}">
+                                                    <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+                                                    <Setter Property="IsEnabled" Value="{Binding IsLightingOn}"/>
+                                                </Style>
+                                            </Slider.Style>
+                                        </Slider>
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="2" Text="100" Foreground="{StaticResource TextPrimBrush}" FontSize="11" VerticalAlignment="Bottom" Margin="10,0,0,0"/>
+                                </Grid>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                    
+                    <!-- SWITCH OFF LIGHTING CARD -->
+                    <Border Style="{StaticResource Card}" CornerRadius="4" Padding="20" Background="{StaticResource BgCardBrush}" BorderThickness="0">
+                        <Grid>
+                            <Border Width="16" Height="16" HorizontalAlignment="Right" VerticalAlignment="Top" CornerRadius="8" Background="#333333" Cursor="Help">
+                                <TextBlock Text="?" Foreground="{StaticResource TextSecBrush}" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+                            </Border>
+                            <StackPanel>
+                                <TextBlock Text="SWITCH OFF LIGHTING" Foreground="{StaticResource AccentBrush}" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,15"/>
+                                <CheckBox Content="When display is turned Off" IsChecked="{Binding TurnOffOnDisplayOff}" Margin="0,0,0,10"/>
+                                <CheckBox Content="When idle for (minutes)" IsChecked="{Binding TurnOffOnIdle}" Margin="0,0,0,15"/>
+                                <Grid Margin="0,10,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="1" Foreground="{StaticResource TextSecBrush}" VerticalAlignment="Bottom" Margin="0,0,10,0"/>
+                                    <StackPanel Grid.Column="1">
+                                        <Border Background="#333333" CornerRadius="2" Padding="6,2" HorizontalAlignment="Left" Margin="0,0,0,5" Width="30" Visibility="{Binding TurnOffOnIdle, Converter={StaticResource BoolToVisibility}}">
+                                            <TextBlock Text="{Binding IdleMinutes}" Foreground="{StaticResource AccentBrush}" HorizontalAlignment="Center" FontSize="11" FontWeight="SemiBold"/>
+                                        </Border>
+                                        <Slider Minimum="1" Maximum="15" Value="{Binding IdleMinutes, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Foreground="{StaticResource AccentBrush}" IsEnabled="{Binding TurnOffOnIdle}">
+                                            <Slider.Style>
+                                                <Style TargetType="Slider" BasedOn="{StaticResource SynapseDpiSlider}">
+                                                    <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+                                                    <Setter Property="IsEnabled" Value="{Binding TurnOffOnIdle}"/>
+                                                </Style>
+                                            </Slider.Style>
+                                        </Slider>
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="2" Text="15" Foreground="{StaticResource TextSecBrush}" VerticalAlignment="Bottom" Margin="10,0,0,0"/>
+                                </Grid>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+                
+                <!-- Right Column -->
+                <StackPanel Grid.Column="2">
+                    <!-- EFFECTS CARD -->
+                    <Border Style="{StaticResource Card}" CornerRadius="4" Padding="20" Background="{StaticResource BgCardBrush}" BorderThickness="0">
+                        <Grid>
+                            <Border Width="16" Height="16" HorizontalAlignment="Right" VerticalAlignment="Top" CornerRadius="8" Background="#333333" Cursor="Help">
+                                <TextBlock Text="?" Foreground="{StaticResource TextSecBrush}" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+                            </Border>
+                            <StackPanel>
+                                <TextBlock Text="EFFECTS" Foreground="{StaticResource AccentBrush}" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,15"/>
+                                <RadioButton Style="{StaticResource SynapseRadioBtn}" Content="Breathing" GroupName="Effects"/>
+                                <RadioButton Style="{StaticResource SynapseRadioBtn}" Content="Static" GroupName="Effects" IsChecked="True"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Grid>
+            
+            <Border Style="{StaticResource UnsavedBadge}" Margin="0,20,0,0" HorizontalAlignment="Left"
+                    Visibility="{Binding HasUnsavedChanges, Converter={StaticResource BoolToVisibility}, ConverterParameter=True}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="⚠ You have unsaved changes" FontSize="13" Foreground="#F59E0B" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                    <Button Content="APPLY" Style="{StaticResource PrimaryBtn}" Command="{Binding ApplyCommand}" Padding="15,6" FontSize="11"/>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

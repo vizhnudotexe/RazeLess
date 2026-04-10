@@ -1,0 +1,156 @@
+<UserControl x:Class="DeathAdderManager.PerformancePage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{StaticResource BgDeepBrush}">
+    <ScrollViewer Padding="40" VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left Column -->
+                <StackPanel Grid.Column="0">
+                    <!-- SENSITIVITY CARD -->
+                    <Border Style="{StaticResource Card}" CornerRadius="4" Padding="20" Background="{StaticResource BgCardBrush}" BorderThickness="0" Margin="0,0,0,20">
+                        <Grid>
+                            <Border Width="16" Height="16" HorizontalAlignment="Right" VerticalAlignment="Top" CornerRadius="8" Background="#333333" Cursor="Help">
+                                <TextBlock Text="?" Foreground="{StaticResource TextSecBrush}" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+                            </Border>
+                            <StackPanel>
+                                <TextBlock Text="SENSITIVITY" Foreground="{StaticResource AccentBrush}" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,15"/>
+                                <TextBlock Text="The number of dots-per-inch (DPI) of mouse movement." Foreground="{StaticResource TextPrimBrush}" FontSize="13" TextWrapping="Wrap" Margin="0,0,0,20"/>
+                                
+                                <CheckBox Style="{StaticResource SynapseToggleSwitch}"
+                                          Content="Sensitivity Stages"
+                                          IsChecked="{Binding SensitivityStagesEnabled, Mode=TwoWay}"
+                                          Margin="0,0,0,20"/>
+                                
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Text="DPI" Foreground="{StaticResource TextSecBrush}" HorizontalAlignment="Left"/>
+                                    <Grid Grid.Column="2">
+                                        <TextBlock Text="200" Foreground="{StaticResource TextPrimBrush}" HorizontalAlignment="Left" FontSize="11"/>
+                                        <TextBlock Text="6400" Foreground="{StaticResource TextPrimBrush}" HorizontalAlignment="Right" FontSize="11"/>
+                                    </Grid>
+                                </Grid>
+                                
+                                <!-- Stages Selector -->
+                                <ItemsControl ItemsSource="{Binding VisibleDpiStages}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="0,10,0,10">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="52"/>
+                                                    <ColumnDefinition Width="68"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                
+                                                <RadioButton Grid.Column="0" GroupName="StagesGroup"
+                                                             IsChecked="{Binding IsActive}"
+                                                             Command="{Binding DataContext.SetActiveStageCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                             CommandParameter="{Binding}"
+                                                             VerticalAlignment="Center"
+                                                             HorizontalAlignment="Center">
+                                                    <RadioButton.Template>
+                                                        <ControlTemplate TargetType="RadioButton">
+                                                            <Grid Width="32" Height="34">
+                                                                <Border x:Name="DotBorder" Width="30" Height="30" CornerRadius="15" Background="#2C2C2C">
+                                                                    <TextBlock Text="{Binding StageIndex}" Foreground="{StaticResource TextPrimBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="SemiBold"/>
+                                                                </Border>
+                                                                <Path x:Name="Arrow" Fill="{Binding Label}" Data="M 0 6 L 4 0 L 8 6 Z" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,-2,0,0" Visibility="Visible"/>
+                                                            </Grid>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsChecked" Value="True">
+                                                                    <Setter TargetName="DotBorder" Property="Background" Value="{StaticResource AccentBrush}"/>
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </RadioButton.Template>
+                                                </RadioButton>
+                                                
+                                                <TextBlock Grid.Column="1" Text="{Binding Dpi}" Foreground="{StaticResource TextPrimBrush}" VerticalAlignment="Center" FontSize="13"/>
+                                                
+                                                <Slider Grid.Column="2" Minimum="200" Maximum="6400" Value="{Binding Dpi, UpdateSourceTrigger=PropertyChanged}" TickFrequency="100" SmallChange="100" LargeChange="100" IsSnapToTickEnabled="True"
+                                                        VerticalAlignment="Center">
+                                                    <Slider.Style>
+                                                        <Style TargetType="Slider" BasedOn="{StaticResource SynapseDpiSlider}">
+                                                            <Setter Property="Foreground" Value="#2A7A25"/>
+                                                            <Setter Property="IsEnabled" Value="True"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsActive}" Value="True">
+                                                                    <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Slider.Style>
+                                                </Slider>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+
+                <!-- Right Column -->
+                <StackPanel Grid.Column="2">
+                    <!-- WIRED POLLING RATE CARD -->
+                    <Border Style="{StaticResource Card}" CornerRadius="4" Padding="20" Background="{StaticResource BgCardBrush}" BorderThickness="0" Margin="0,0,0,20">
+                        <Grid>
+                            <Border Width="16" Height="16" HorizontalAlignment="Right" VerticalAlignment="Top" CornerRadius="8" Background="#333333" Cursor="Help">
+                                <TextBlock Text="?" Foreground="{StaticResource TextSecBrush}" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+                            </Border>
+                            <StackPanel>
+                                <TextBlock Text="WIRED POLLING RATE" Foreground="{StaticResource AccentBrush}" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,15"/>
+                                <TextBlock Text="The frequency (Hz) of data updates in a second." Foreground="{StaticResource TextPrimBrush}" FontSize="13" TextWrapping="Wrap" Margin="0,0,0,15"/>
+                                
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton Style="{StaticResource SynapseSegmentedBtn}" Content="125"
+                                                 IsChecked="{Binding SelectedPollingRate, Mode=TwoWay, Converter={StaticResource PollingRateConverter}, ConverterParameter=125}"/>
+                                    <RadioButton Style="{StaticResource SynapseSegmentedBtn}" Content="500" Margin="8,0"
+                                                 IsChecked="{Binding SelectedPollingRate, Mode=TwoWay, Converter={StaticResource PollingRateConverter}, ConverterParameter=500}"/>
+                                    <RadioButton Style="{StaticResource SynapseSegmentedBtn}" Content="1000"
+                                                 IsChecked="{Binding SelectedPollingRate, Mode=TwoWay, Converter={StaticResource PollingRateConverter}, ConverterParameter=1000}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                    
+                    <!-- MOUSE PROPERTIES CARD -->
+                    <Border Style="{StaticResource Card}" CornerRadius="4" Padding="20" Background="{StaticResource BgCardBrush}" BorderThickness="0">
+                        <Grid>
+                            <Border Width="16" Height="16" HorizontalAlignment="Right" VerticalAlignment="Top" CornerRadius="8" Background="#333333" Cursor="Help">
+                                <TextBlock Text="?" Foreground="{StaticResource TextSecBrush}" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+                            </Border>
+                            <StackPanel>
+                                <TextBlock Text="MOUSE PROPERTIES" Foreground="{StaticResource AccentBrush}" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,15"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE782;" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource TextSecBrush}" FontSize="24" Margin="0,0,10,0"/>
+                                    <TextBlock Text="Open Windows Mouse Properties" Foreground="{StaticResource TextPrimBrush}" FontSize="13" VerticalAlignment="Center" TextDecorations="Underline" Cursor="Hand"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Grid>
+
+            <Border Style="{StaticResource UnsavedBadge}" Margin="0,20,0,0" HorizontalAlignment="Left"
+                    Visibility="{Binding HasUnsavedChanges, Converter={StaticResource TabVis}, ConverterParameter=True}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="⚠ You have unsaved changes" FontSize="13" Foreground="#F59E0B" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                    <Button Content="APPLY" Style="{StaticResource PrimaryBtn}" Command="{Binding ApplyCommand}" Padding="15,6" FontSize="11"/>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

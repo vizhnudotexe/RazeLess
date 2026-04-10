@@ -1,0 +1,305 @@
+<Application x:Class="DeathAdderManager.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:DeathAdderManager"
+             ShutdownMode="OnMainWindowClose">
+    <Application.Resources>
+        <local:TabVisConverter x:Key="TabVis"/>
+        <local:PollingRateConverter x:Key="PollingRateConverter"/>
+        <local:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
+        <local:NullToVisibilityConverter x:Key="NullToVis"/>
+        <local:SelectedActionToBrushConverter x:Key="SelectedActionToBrush"/>
+        <!-- ── Colours ── -->
+        <Color x:Key="BgDeepColor">#1B1B1B</Color>
+        <Color x:Key="BgCardColor">#222222</Color>
+        <Color x:Key="BgPanelColor">#111111</Color>
+        <Color x:Key="AccentGreen">#44D62C</Color>
+        <Color x:Key="AccentGreenDim">#34A824</Color>
+        <Color x:Key="TextPrim">#F2F2F2</Color>
+        <Color x:Key="TextSec">#969696</Color>
+        <Color x:Key="Border">#333333</Color>
+        <Color x:Key="Danger">#FF4040</Color>
+
+        <SolidColorBrush x:Key="BgDeepBrush"       Color="{StaticResource BgDeepColor}"/>
+        <SolidColorBrush x:Key="BgCardBrush"       Color="{StaticResource BgCardColor}"/>
+        <SolidColorBrush x:Key="BgPanelBrush"      Color="{StaticResource BgPanelColor}"/>
+        <SolidColorBrush x:Key="AccentBrush"       Color="{StaticResource AccentGreen}"/>
+        <SolidColorBrush x:Key="AccentDimBrush"    Color="{StaticResource AccentGreenDim}"/>
+        <SolidColorBrush x:Key="TextPrimBrush"     Color="{StaticResource TextPrim}"/>
+        <SolidColorBrush x:Key="TextSecBrush"      Color="{StaticResource TextSec}"/>
+        <SolidColorBrush x:Key="BorderBrush2"      Color="{StaticResource Border}"/>
+        <SolidColorBrush x:Key="DangerBrush"       Color="{StaticResource Danger}"/>
+
+        <!-- ── Typography ── -->
+        <FontFamily x:Key="MainFont">Segoe UI</FontFamily>
+
+        <!-- ── Button ── -->
+        <Style x:Key="PrimaryBtn" TargetType="Button">
+            <Setter Property="Background"       Value="{StaticResource AccentBrush}"/>
+            <Setter Property="Foreground"       Value="#0D0D0F"/>
+            <Setter Property="FontWeight"       Value="SemiBold"/>
+            <Setter Property="FontSize"         Value="13"/>
+            <Setter Property="Padding"          Value="18,8"/>
+            <Setter Property="BorderThickness"  Value="0"/>
+            <Setter Property="Cursor"           Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Root" Background="{TemplateBinding Background}"
+                                CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="{StaticResource AccentDimBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Root" Property="Opacity" Value="0.4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SecondaryBtn" TargetType="Button" BasedOn="{StaticResource PrimaryBtn}">
+            <Setter Property="Background"  Value="{StaticResource BgPanelBrush}"/>
+            <Setter Property="Foreground"  Value="{StaticResource TextPrimBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush2}"/>
+        </Style>
+
+        <Style x:Key="DangerBtn" TargetType="Button" BasedOn="{StaticResource PrimaryBtn}">
+            <Setter Property="Background" Value="{StaticResource DangerBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <!-- ── TextBox ── -->
+        <Style TargetType="TextBox">
+            <Setter Property="Background"      Value="{StaticResource BgPanelBrush}"/>
+            <Setter Property="Foreground"      Value="{StaticResource TextPrimBrush}"/>
+            <Setter Property="BorderBrush"     Value="{StaticResource BorderBrush2}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding"         Value="8,6"/>
+            <Setter Property="FontSize"        Value="13"/>
+            <Setter Property="CaretBrush"      Value="{StaticResource AccentBrush}"/>
+        </Style>
+
+        <!-- ── ComboBox ── -->
+        <Style TargetType="ComboBox">
+            <Setter Property="Foreground" Value="{StaticResource TextPrimBrush}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton x:Name="ToggleButton" Focusable="false"
+                                          IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                          ClickMode="Press">
+                                <ToggleButton.Template>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <Border Background="{StaticResource BgCardBrush}" BorderBrush="{StaticResource BorderBrush2}" BorderThickness="1" CornerRadius="4">
+                                            <Path Fill="{StaticResource TextSecBrush}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" Data="M 0 0 L 4 4 L 8 0 Z"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                            </ToggleButton>
+                            <ContentPresenter x:Name="ContentSite" IsHitTestVisible="False"
+                                              Content="{TemplateBinding SelectionBoxItem}"
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                              Margin="10,0,30,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                            <Popup x:Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False">
+                                <Border Background="{StaticResource BgDeepBrush}" BorderThickness="1" BorderBrush="{StaticResource BorderBrush2}" MaxHeight="200" MinWidth="{TemplateBinding ActualWidth}">
+                                    <ScrollViewer>
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Background"      Value="{StaticResource BgPanelBrush}"/>
+            <Setter Property="Foreground"      Value="{StaticResource TextPrimBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding"         Value="8,5"/>
+        </Style>
+
+        <!-- ── Slider ── -->
+        <Style TargetType="Slider">
+            <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+        </Style>
+
+        <Style x:Key="SynapseDpiThumb" TargetType="Thumb">
+            <Setter Property="Width" Value="16"/>
+            <Setter Property="Height" Value="16"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Ellipse Fill="{StaticResource AccentBrush}" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SynapseDpiSlider" TargetType="Slider">
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+                        <Grid Height="20" VerticalAlignment="Center">
+                            <Track x:Name="PART_Track" VerticalAlignment="Center">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Command="Slider.DecreaseLarge" IsTabStop="False" Focusable="False">
+                                        <RepeatButton.Template>
+                                            <ControlTemplate TargetType="RepeatButton">
+                                                <Border Height="5" CornerRadius="3" Background="{TemplateBinding Foreground}" VerticalAlignment="Center"/>
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+                                    </RepeatButton>
+                                </Track.DecreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb Style="{StaticResource SynapseDpiThumb}" />
+                                </Track.Thumb>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Command="Slider.IncreaseLarge" IsTabStop="False" Focusable="False">
+                                        <RepeatButton.Template>
+                                            <ControlTemplate TargetType="RepeatButton">
+                                                <Border Height="5" CornerRadius="3" Background="#1E5F1D" VerticalAlignment="Center"/>
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+                                    </RepeatButton>
+                                </Track.IncreaseRepeatButton>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ── Label ── -->
+        <Style TargetType="Label">
+            <Setter Property="Foreground" Value="{StaticResource TextSecBrush}"/>
+            <Setter Property="FontSize"   Value="12"/>
+            <Setter Property="Padding"    Value="0,0,0,2"/>
+        </Style>
+
+        <!-- ── Card border ── -->
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background"      Value="{StaticResource BgCardBrush}"/>
+            <Setter Property="BorderBrush"     Value="{StaticResource BorderBrush2}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius"    Value="10"/>
+            <Setter Property="Padding"         Value="20"/>
+        </Style>
+
+        <!-- ── Section heading ── -->
+        <Style x:Key="SectionHeading" TargetType="TextBlock">
+            <Setter Property="FontSize"     Value="15"/>
+            <Setter Property="FontWeight"   Value="SemiBold"/>
+            <Setter Property="Foreground"   Value="{StaticResource TextPrimBrush}"/>
+            <Setter Property="Margin"       Value="0,0,0,12"/>
+        </Style>
+
+        <!-- ── Synapse Toggle Switch ── -->
+        <Style x:Key="SynapseToggleSwitch" TargetType="CheckBox">
+            <Setter Property="Background" Value="#333333"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock x:Name="ToggleLabel" Text="{TemplateBinding Content}" Foreground="{StaticResource TextPrimBrush}"
+                                       VerticalAlignment="Center" Margin="0,0,10,0" FontSize="13" FontWeight="SemiBold"/>
+                            <Border x:Name="Track" Background="#333333" Width="36" Height="18" CornerRadius="9">
+                                <Ellipse x:Name="Thumb" Fill="#0D0D0F" Width="14" Height="14"
+                                         HorizontalAlignment="Left" Margin="2,0,0,0"/>
+                            </Border>
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="ToggleLabel" Property="Foreground" Value="{StaticResource TextPrimBrush}"/>
+                                <Setter TargetName="Track" Property="Background" Value="{StaticResource AccentBrush}"/>
+                                <Setter TargetName="Thumb" Property="HorizontalAlignment" Value="Right"/>
+                                <Setter TargetName="Thumb" Property="Margin" Value="0,0,2,0"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ── Segmented Radio Button ── -->
+        <Style x:Key="SynapseSegmentedBtn" TargetType="RadioButton">
+            <Setter Property="MinWidth" Value="72"/>
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="Border"
+                                MinWidth="{TemplateBinding MinWidth}"
+                                Height="{TemplateBinding Height}"
+                                BorderThickness="1"
+                                BorderBrush="#333333"
+                                Background="Transparent"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimBrush}"/>
+        </Style>
+        
+        <!-- ── Synapse Checkbox ── -->
+        <Style TargetType="CheckBox">
+            <Setter Property="Foreground" Value="{StaticResource TextPrimBrush}"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+
+        <Style x:Key="SynapseRadioBtn" TargetType="RadioButton">
+            <Setter Property="Foreground" Value="{StaticResource TextPrimBrush}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Margin" Value="0,5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Grid Width="16" Height="16">
+                                <Ellipse Stroke="#333333" StrokeThickness="1"/>
+                                <Ellipse x:Name="Dot" Fill="{StaticResource AccentBrush}" Width="8" Height="8" Visibility="Hidden"/>
+                            </Grid>
+                            <ContentPresenter Margin="8,0,0,0"/>
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Dot" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ── Unsaved warning ── -->
+        <Style x:Key="UnsavedBadge" TargetType="Border">
+            <Setter Property="Background"   Value="#2A1F00"/>
+            <Setter Property="BorderBrush"  Value="#F59E0B"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding"      Value="10,4"/>
+        </Style>
+
+    </Application.Resources>
+</Application>

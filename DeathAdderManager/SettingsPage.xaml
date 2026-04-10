@@ -1,0 +1,62 @@
+<UserControl x:Class="DeathAdderManager.SettingsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{StaticResource BgDeepBrush}">
+    <ScrollViewer Padding="24" VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <TextBlock Text="Settings" Style="{StaticResource SectionHeading}" FontSize="20"/>
+
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Startup" Style="{StaticResource SectionHeading}"/>
+                    <Border Background="{StaticResource BgPanelBrush}" CornerRadius="6" Padding="14,12">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Run on Windows Startup" FontSize="13"
+                                           Foreground="{StaticResource TextPrimBrush}"/>
+                                <TextBlock Text="App will start silently and restore your last profile"
+                                           FontSize="11" Foreground="{StaticResource TextSecBrush}" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <CheckBox Grid.Column="1" IsChecked="{Binding RunOnStartup}"
+                                      VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+                    <TextBlock Text="{Binding StatusMessage}" FontSize="12" Margin="0,8,0,0"
+                               Foreground="{StaticResource AccentBrush}"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Data &amp; Storage" Style="{StaticResource SectionHeading}"/>
+                    <TextBlock Text="All profiles and device data are stored locally on this PC. No cloud, no internet."
+                               FontSize="12" Foreground="{StaticResource TextSecBrush}" TextWrapping="Wrap" Margin="0,0,0,12"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding AppDataPath}" FontSize="11"
+                                   Foreground="{StaticResource TextSecBrush}" VerticalAlignment="Center"
+                                   Margin="0,0,12,0" TextTrimming="CharacterEllipsis"/>
+                        <Button Content="Open Folder" Style="{StaticResource SecondaryBtn}"
+                                Command="{Binding OpenAppDataFolderCommand}" Padding="12,6"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}" Margin="0,16,0,0">
+                <StackPanel>
+                    <TextBlock Text="About" Style="{StaticResource SectionHeading}"/>
+                    <TextBlock FontSize="12" Foreground="{StaticResource TextSecBrush}" TextWrapping="Wrap">
+                        <Run Text="DeathAdder Essential Manager v1.0"/>
+                        <LineBreak/>
+                        <Run Text="A lightweight, fully offline replacement for Razer Synapse."/>
+                        <LineBreak/>
+                        <Run Text="Zero telemetry · Zero ads · Zero cloud · 100% local."/>
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
