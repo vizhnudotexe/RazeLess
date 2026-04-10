@@ -194,21 +194,6 @@ Primary goals:
 
 ---
 
-## 🛣️ Roadmap
-
-* [x] Device detection
-* [x] Multi-profile architecture
-* [x] Startup restore
-* [x] Device fingerprint persistence
-* [ ] Full DPI transaction stability
-* [ ] Polling rate transaction layer
-* [ ] Lighting idle automation
-* [ ] Profile export/import
-* [ ] Per-game auto profile suggestions
-* [ ] Advanced macro-safe button mapping
-
----
-
 ## 🤝 Why this matters
 
 This project represents something bigger than just replacing one vendor app.
