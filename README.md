@@ -137,20 +137,40 @@ This project was built as a **real low-level Windows systems project**, not just
 
 ---
 
+## 🚀 Getting Started
+
+### Prerequisites
+* **Windows 10/11**
+* **.NET 8.0 Runtime** (to run) or **.NET 8.0 SDK** (to build)
+
+### How to Run
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/vizhnudotexe/ViperLite.git
+   ```
+2. **Build the project**:
+   Open a terminal in the project root and run:
+   ```powershell
+   dotnet build -c Release
+   ```
+3. **Launch the application**:
+   ```powershell
+   ./DeathAdderManager/bin/Release/net8.0-windows/DeathAdderManager.exe
+   ```
+   *Note: Ensure your mouse is plugged in before launching.*
+
+---
+
 ## 🎯 Supported Hardware
 
-Currently targets:
+RazeLess currently supports the following Razer devices:
 
-* **Razer DeathAdder Essential (2021)**
-* Model: **RZ01-0385**
-* Product No: **RZ01-03850100**
+| Device Model | Product ID (PID) | Notes |
+| :--- | :--- | :--- |
+| **Razer DeathAdder Essential** | `0x0071` | Legacy Model |
+| **Razer DeathAdder Essential (2021)** | `0x0098` | White/2021 Refresh |
 
-This hardware-specific focus keeps the software:
-
-* lightweight
-* reliable
-* protocol-accurate
-* easier to optimize deeply
+*Don't see your device? Feel free to open an issue with your USB VID/PID.*
 
 ---
 
