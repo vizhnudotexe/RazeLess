@@ -99,21 +99,17 @@
                             </Border>
                             <StackPanel>
                                 <TextBlock Text="EFFECTS" Foreground="{StaticResource AccentBrush}" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,15"/>
-                                <RadioButton Style="{StaticResource SynapseRadioBtn}" Content="Breathing" GroupName="Effects"/>
-                                <RadioButton Style="{StaticResource SynapseRadioBtn}" Content="Static" GroupName="Effects" IsChecked="True"/>
+                                <RadioButton Style="{StaticResource SynapseRadioBtn}" Content="Breathing" GroupName="Effects" 
+                                             IsChecked="{Binding SelectedEffect, Converter={StaticResource LightingEffectConverter}, ConverterParameter=Breathing}"/>
+                                <RadioButton Style="{StaticResource SynapseRadioBtn}" Content="Static" GroupName="Effects" Margin="0,8,0,0"
+                                             IsChecked="{Binding SelectedEffect, Converter={StaticResource LightingEffectConverter}, ConverterParameter=Static}"/>
                             </StackPanel>
                         </Grid>
                     </Border>
                 </StackPanel>
             </Grid>
             
-            <Border Style="{StaticResource UnsavedBadge}" Margin="0,20,0,0" HorizontalAlignment="Left"
-                    Visibility="{Binding HasUnsavedChanges, Converter={StaticResource BoolToVisibility}, ConverterParameter=True}">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="⚠ You have unsaved changes" FontSize="13" Foreground="#F59E0B" VerticalAlignment="Center" Margin="0,0,20,0"/>
-                    <Button Content="APPLY" Style="{StaticResource PrimaryBtn}" Command="{Binding ApplyCommand}" Padding="15,6" FontSize="11"/>
-                </StackPanel>
-            </Border>
+            
 
         </StackPanel>
     </ScrollViewer>

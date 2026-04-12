@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Windows.Data;
+using DeathAdderManager.Core.Domain.Enums;
 
 namespace DeathAdderManager;
 
@@ -39,6 +40,33 @@ public class PollingRateConverter : IValueConverter
             return paramValue;
         }
         return 1000;
+    }
+}
+
+public class LightingEffectConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is LightingEffectType selected && parameter is string paramStr)
+        {
+            if (Enum.TryParse<LightingEffectType>(paramStr, out var paramEffect))
+            {
+                return selected == paramEffect;
+            }
+        }
+        return false;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is bool isChecked && isChecked && parameter is string paramStr)
+        {
+            if (Enum.TryParse<LightingEffectType>(paramStr, out var effect))
+            {
+                return effect;
+            }
+        }
+        return LightingEffectType.Static;
     }
 }
 

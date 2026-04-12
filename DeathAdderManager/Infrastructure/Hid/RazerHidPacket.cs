@@ -290,6 +290,58 @@ public static class RazerHidPacket
         return buf;
     }
 
+    public static byte[] BuildSetLedEffectWithParams(byte ledZone, byte effect, byte speed, byte[]? colors = null)
+    {
+        // Extended effect packet with parameters (for breathing effect)
+        // args[0] = varstore (0x01)
+        // args[1] = LED zone
+        // args[2] = effect type
+        // args[3] = effect speed (0x01 = fast, 0x02 = medium, 0x03 = slow for breathing)
+        // args[4..6] = color RGB (for RGB devices, but DeathAdder Essential is single-color green)
+        // args[7] = unknown/flags
+        var buf = Create(ClassLed, CmdSetLedEffect, 0x08);
+        buf[ArgsOffset + 0] = VarStore;
+        buf[ArgsOffset + 1] = ledZone;
+        buf[ArgsOffset + 2] = effect;
+        buf[ArgsOffset + 3] = speed;  // 0x01 = fast, 0x02 = medium, 0x03 = slow
+
+        if (colors != null && colors.Length >= 3)
+        {
+            buf[ArgsOffset + 4] = colors[0];  // R
+            buf[ArgsOffset + 5] = colors[1];  // G
+            buf[ArgsOffset + 6] = colors[2];  // B
+        }
+        
+        Finalise(buf);
+        return buf;
+    }
+
+    // Effect type constants for BuildSetLedEffectWithParams
+    public const byte EffectStatic = 0x01;
+    public const byte EffectBreathing = 0x02;
+    public const byte EffectNone = 0x00;
+    public const byte EffectWave = 0x03;
+    public const byte EffectSpectrum = 0x04;
+    public const byte EffectReactive = 0x05;
+
+    // DeathAdder Essential 2021 (RZ01-0385) specific command IDs and effect values
+    // Based on OpenRazer driver - all extended LED effects use Cmd=0x0D
+    public const byte CmdLedExtendedMatrix = 0x0D;
+    
+    // LOGO_LED = 0x01 for extended matrix API (not 0x04)
+    public const byte LogoLedId = 0x01;
+
+    // Effect IDs for extended matrix API
+    public const byte EffectNone2021 = 0x00;
+    public const byte EffectStatic2021 = 0x06;
+    public const byte EffectBreathing2021 = 0x03;
+    public const byte EffectBreathingRandom = 0x03;
+
+    // Command IDs for 2021 model (LEDS class)
+    public const byte CmdLedSetBrightness2021 = 0x03;
+    public const byte CmdLedSetState2021 = 0x00;
+    public const byte CmdLedSetEffect2021 = 0x0D;
+
     public static bool ValidateCrc(byte[] response)
     {
         if (response.Length < PayloadSize) return false;
@@ -318,4 +370,51 @@ public static class RazerHidPacket
         if (GetTransactionId(response) != expectedTransId) return false;
         return ValidateCrc(response);
     }
+
+    // DeathAdder Essential 2021 (RZ01-0385) specific packet builders
+// Based on OpenRazer driver (razerchromacommon.c)
+
+/// <summary>
+/// Set logo OFF - matches OpenRazer: Class=0x03 Cmd=0x0D DataSize=0x03 args=01 01 00
+/// </summary>
+public static byte[] BuildSetLogoNone2021()
+{
+    var buf = Create(ClassLed, CmdLedExtendedMatrix, 0x03);
+    buf[ArgsOffset + 0] = 0x01;  // varstore
+    buf[ArgsOffset + 1] = LogoLedId;  // LOGO_LED = 0x01
+    buf[ArgsOffset + 2] = EffectNone2021;  // none effect
+    Finalise(buf);
+    return buf;
+}
+
+/// <summary>
+/// Set logo STATIC - matches OpenRazer: Class=0x03 Cmd=0x0D DataSize=0x06 args=01 01 06 00 FF 00
+/// </summary>
+public static byte[] BuildSetLogoStatic2021()
+{
+    var buf = Create(ClassLed, CmdLedExtendedMatrix, 0x06);
+    buf[ArgsOffset + 0] = 0x01;  // varstore
+    buf[ArgsOffset + 1] = LogoLedId;  // LOGO_LED = 0x01
+    buf[ArgsOffset + 2] = EffectStatic2021;  // static effect = 0x06
+    buf[ArgsOffset + 3] = 0x00;  // R
+    buf[ArgsOffset + 4] = 0xFF;  // G (hardware is green)
+    buf[ArgsOffset + 5] = 0x00;  // B
+    Finalise(buf);
+    return buf;
+}
+
+/// <summary>
+/// Set logo BREATHING - matches OpenRazer: Class=0x03 Cmd=0x0D DataSize=0x0A args=01 01 03 03 00 00 00 00 00 00
+/// </summary>
+public static byte[] BuildSetLogoEffect2021(byte effect, byte speed)
+{
+    var buf = Create(ClassLed, CmdLedExtendedMatrix, 0x0A);
+    buf[ArgsOffset + 0] = 0x01;  // varstore
+    buf[ArgsOffset + 1] = LogoLedId;  // LOGO_LED = 0x01
+    buf[ArgsOffset + 2] = EffectBreathing2021;  // breathing = 0x03
+    buf[ArgsOffset + 3] = EffectBreathingRandom;  // random = 0x03 (hardware handles color)
+    // args[4-9] = 0x00 (RGB slots unused)
+    Finalise(buf);
+    return buf;
+}
 }

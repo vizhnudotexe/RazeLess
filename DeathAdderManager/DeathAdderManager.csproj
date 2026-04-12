@@ -13,6 +13,7 @@
   <ItemGroup>
     <Compile Remove="Diagnostics.cs" />
     <Compile Remove="obj\**\*.cs" />
+    <PackageReference Include="LibUsbDotNet" Version="2.2.75" />
     <Page Remove="obj\**\*.xaml" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageReference Include="HidSharp" Version="2.6.4" />

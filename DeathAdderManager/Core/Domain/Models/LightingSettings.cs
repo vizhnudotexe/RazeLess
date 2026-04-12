@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using DeathAdderManager.Core.Domain.Enums;
 
 namespace DeathAdderManager.Core.Domain.Models;
 
@@ -16,6 +17,10 @@ public sealed class LightingSettings
     [JsonPropertyName("brightness")]
     public int Brightness { get; set; } = 100;
 
+    /// <summary>Lighting effect type: Static, Breathing, or None.</summary>
+    [JsonPropertyName("effect")]
+    public LightingEffectType Effect { get; set; } = LightingEffectType.Static;
+
     /// <summary>If true, lighting turns off when the Windows display powers down.</summary>
     [JsonPropertyName("offOnDisplayOff")]
     public bool TurnOffOnDisplayOff { get; set; } = false;
@@ -31,6 +36,7 @@ public sealed class LightingSettings
     public static LightingSettings CreateDefault() => new()
     {
         Brightness          = 100,
+        Effect              = LightingEffectType.Static,
         TurnOffOnDisplayOff = false,
         TurnOffOnIdle       = false,
         IdleMinutes         = 1,

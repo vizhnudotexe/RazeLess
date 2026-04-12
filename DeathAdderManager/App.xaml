@@ -6,6 +6,7 @@
     <Application.Resources>
         <local:TabVisConverter x:Key="TabVis"/>
         <local:PollingRateConverter x:Key="PollingRateConverter"/>
+        <local:LightingEffectConverter x:Key="LightingEffectConverter"/>
         <local:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
         <local:NullToVisibilityConverter x:Key="NullToVis"/>
         <local:SelectedActionToBrushConverter x:Key="SelectedActionToBrush"/>

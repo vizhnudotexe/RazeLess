@@ -47,3 +47,13 @@ public enum LightingEffect
     Static = 0,
     Off    = 1,
 }
+
+/// <summary>
+/// Lighting effect types supported by Razer DeathAdder Essential.
+/// Based on OpenRazer driver methods: set_logo_static, set_logo_breath_single
+/// </summary>
+public enum LightingEffectType
+{
+    Static = 0,      // Solid color (single-color green on this device)
+    Breathing = 1,  // Single color breathing effect
+}

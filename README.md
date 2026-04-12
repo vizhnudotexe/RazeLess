@@ -77,6 +77,7 @@ What began as a utility became a **systems engineering project around low-level 
 * Instant profile apply
 
 ### 💡 Lighting
+> ⚠️ **UI complete — backend hardware implementation in progress**
 
 * Brightness control (**0–100**)
 * Disable lighting completely
@@ -84,7 +85,10 @@ What began as a utility became a **systems engineering project around low-level 
 * Turn off after configurable idle timeout
 * Restore on movement
 
+The lighting workflow and UI are already designed, but **device-level HID communication is still being finalized**.
+
 ### 🖱️ Customization
+> ⚠️ **UI complete — backend remapping logic in progress**
 
 * Remap every supported button except left click
 * Disable buttons
@@ -92,6 +96,8 @@ What began as a utility became a **systems engineering project around low-level 
 * Mouse-to-mouse remapping
 * Media key support
 * Browser action support
+
+The full remapping interface is already available, but **button switching and hardware-side apply behavior are still under active development**.
 
 ### 📂 Profiles
 
@@ -171,6 +177,30 @@ RazeLess currently supports the following Razer devices:
 | **Razer DeathAdder Essential (2021)** | `0x0098` | White/2021 Refresh |
 
 *Don't see your device? Feel free to open an issue with your USB VID/PID.*
+
+---
+
+## 🤝 Contributors Welcome
+
+One of the biggest planned upgrades is a **HyperShift-like secondary button layer**, inspired by the official Synapse workflow.
+
+This would enable:
+* secondary button actions
+* hold-to-shift modifier logic
+* alternate productivity bindings
+* per-app advanced remaps
+* multi-layer gaming shortcuts
+
+Contributors experienced in:
+* USB HID
+* Windows hooks
+* Raw Input
+* interception drivers
+* low-level remapping
+* packet analysis
+* reverse engineering Synapse behavior
+
+would be incredibly valuable to help build this feature.
 
 ---
 

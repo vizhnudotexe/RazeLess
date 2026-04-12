@@ -40,6 +40,7 @@ public interface IMouseDevice : IAsyncDisposable
     // ── Lighting ─────────────────────────────
     Task SetBrightnessAsync(int percent, CancellationToken ct = default);
     Task SetLightingEnabledAsync(bool enabled, CancellationToken ct = default);
+    Task SetLightingEffectAsync(LightingEffectType effect, CancellationToken ct = default);
 
     // ── Buttons ──────────────────────────────
     Task SetButtonMappingAsync(MouseButton button, ButtonAction action, CancellationToken ct = default);
@@ -92,6 +93,7 @@ public interface IStartupRestoreService
 public interface IMouseService
 {
     IMouseDevice? ActiveDevice         { get; }
+    IMouseDevice? LedDevice            { get; }
     MouseProfile? ActiveProfile        { get; }
     bool          IsDeviceConnected    { get; }
 

@@ -17,20 +17,23 @@ namespace DeathAdderManager.Application;
 /// </summary>
 public sealed class MouseService : BackgroundService, IMouseService
 {
-    private readonly IDeviceFingerprintService     _fps;
-    private readonly IProfileRepository            _profiles;
-    private readonly ILogger<MouseService>         _logger;
-    private readonly ILogger<HidTransport>         _transportLogger;
-    private readonly ILogger<MouseDevice>          _deviceLogger;
+    private readonly IDeviceFingerprintService        _fps;
+    private readonly IProfileRepository               _profiles;
+    private readonly ILogger<MouseService>            _logger;
+    private readonly ILogger<HidTransport>            _transportLogger;
+    private readonly ILogger<MouseDevice>             _deviceLogger;
     private readonly ILogger<RazerTransactionService> _transactionLogger;
-    private readonly HidDeviceWatcher              _watcher;
-    private readonly LightingAutomationService     _lightingAutomation;
+    private readonly ILogger<WinUsbHidTransport>      _winUsbLogger;
+    private readonly HidDeviceWatcher                 _watcher;
+    private readonly LightingAutomationService        _lightingAutomation;
 
-    private IMouseDevice?  _activeDevice;
-    private MouseProfile?  _activeProfile;
+    private IMouseDevice?   _activeDevice;
+    private MouseProfile?   _activeProfile;
     private ISet<HidDevice> _knownHidDevices = new HashSet<HidDevice>(DevicePathComparer.Instance);
+    private IMouseDevice?   _ledDevice;
 
     public IMouseDevice? ActiveDevice      => _activeDevice;
+    public IMouseDevice? LedDevice         => _ledDevice;
     public MouseProfile? ActiveProfile     => _activeProfile;
     public bool          IsDeviceConnected => _activeDevice?.IsConnected ?? false;
 
@@ -38,22 +41,24 @@ public sealed class MouseService : BackgroundService, IMouseService
     public event EventHandler<MouseProfile?>? ProfileChanged;
 
     public MouseService(
-        IDeviceFingerprintService   fps,
-        IProfileRepository          profiles,
-        HidDeviceWatcher            watcher,
-        ILogger<MouseService>       logger,
-        ILogger<HidTransport>       transportLogger,
-        ILogger<MouseDevice>        deviceLogger,
-        ILogger<RazerTransactionService> transactionLogger,
-        LightingAutomationService   lightingAutomation)
+        IDeviceFingerprintService          fps,
+        IProfileRepository                 profiles,
+        HidDeviceWatcher                   watcher,
+        ILogger<MouseService>              logger,
+        ILogger<HidTransport>              transportLogger,
+        ILogger<MouseDevice>               deviceLogger,
+        ILogger<RazerTransactionService>   transactionLogger,
+        ILogger<WinUsbHidTransport>        winUsbLogger,
+        LightingAutomationService          lightingAutomation)
     {
-        _fps             = fps;
-        _profiles        = profiles;
-        _watcher         = watcher;
-        _logger          = logger;
-        _transportLogger = transportLogger;
-        _deviceLogger    = deviceLogger;
+        _fps               = fps;
+        _profiles          = profiles;
+        _watcher           = watcher;
+        _logger            = logger;
+        _transportLogger   = transportLogger;
+        _deviceLogger      = deviceLogger;
         _transactionLogger = transactionLogger;
+        _winUsbLogger      = winUsbLogger;
         _lightingAutomation = lightingAutomation;
     }
 
@@ -172,15 +177,31 @@ public sealed class MouseService : BackgroundService, IMouseService
             await _activeDevice.DisposeAsync();
 
         MouseDevice? device = null;
-        foreach (var hidDev in hidDevs)
+
+        // ── Strategy 1: WinUSB (Interface 0 via Zadig) ────────────────────────
+        // If WinUSB is installed on mi_00, this handles BOTH DPI and LED commands.
+        device = MouseDeviceFactory.TryOpenViaWinUsb(
+            fp, _transportLogger, _deviceLogger, _transactionLogger, _winUsbLogger);
+
+        if (device != null)
         {
-            _logger.LogInformation("Trying interface: {Path} (MaxLen={MaxLen})", 
-                hidDev.DevicePath, hidDev.MaxInputReportLength);
-            device = MouseDeviceFactory.TryOpen(hidDev, fp, _transportLogger, _deviceLogger, _transactionLogger);
-            if (device != null)
+            _logger.LogInformation("Opened via WinUSB (Interface 0) — LED + DPI enabled.");
+        }
+        else
+        {
+            // ── Strategy 2: PInvoke HID fallback ──────────────────────────────
+            // LED will not work; DPI and polling rate still function.
+            foreach (var hidDev in hidDevs)
             {
-                _logger.LogInformation("Successfully opened interface with MaxLen={MaxLen}", hidDev.MaxInputReportLength);
-                break;
+                _logger.LogInformation("Trying HID interface: {Path} (MaxLen={MaxLen})",
+                    hidDev.DevicePath, hidDev.MaxInputReportLength);
+                device = MouseDeviceFactory.TryOpen(
+                    hidDev, fp, _transportLogger, _deviceLogger, _transactionLogger, _winUsbLogger);
+                if (device != null)
+                {
+                    _logger.LogInformation("Opened via HID (DPI only, no LED). Run Zadig on Interface 0 to enable LED.");
+                    break;
+                }
             }
         }
 
@@ -191,6 +212,7 @@ public sealed class MouseService : BackgroundService, IMouseService
         }
 
         _activeDevice = device;
+        _ledDevice = MouseDeviceFactory.GetLedDevice();
         _logger.LogInformation("Connected to {DisplayName}", fp.DisplayName);
         DeviceChanged?.Invoke(this, device);
 
