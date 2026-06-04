@@ -33,7 +33,7 @@ Just fast, direct mouse control.
 
 ---
 
-## 💡 Why this project exists
+## Why this project exists
 
 Razer’s official ecosystem offers good hardware, but the software experience felt over-engineered for the wrong reasons.
 
@@ -66,9 +66,9 @@ What began as a utility became a **systems engineering project around low-level 
 
 ---
 
-## 🚀 Features
+##  Features
 
-### 🎯 Performance
+###  Performance
 
 * Up to **5 DPI stages**
 * DPI range: **200 → 6400**
@@ -76,8 +76,8 @@ What began as a utility became a **systems engineering project around low-level 
 * **100 / 500 / 1000 Hz polling**
 * Instant profile apply
 
-### 💡 Lighting
-> ⚠️ **UI complete — backend hardware implementation in progress**
+###  Lighting
+>  **UI complete — backend hardware implementation in progress**
 
 * Brightness control (**0–100**)
 * Disable lighting completely
@@ -87,8 +87,8 @@ What began as a utility became a **systems engineering project around low-level 
 
 The lighting workflow and UI are already designed, but **device-level HID communication is still being finalized**.
 
-### 🖱️ Customization
-> ⚠️ **UI complete — backend remapping logic in progress**
+###  Customization
+>  **UI complete — backend remapping logic in progress**
 
 * Remap every supported button except left click
 * Disable buttons
@@ -99,14 +99,14 @@ The lighting workflow and UI are already designed, but **device-level HID commun
 
 The full remapping interface is already available, but **button switching and hardware-side apply behavior are still under active development**.
 
-### 📂 Profiles
+###  Profiles
 
 * Manual profile switching
 * Per-task or per-scenario presets
 * Last used profile restore
 * Per-device profile associations
 
-### ⚙️ Reliability
+###  Reliability
 
 * HID reconnect detection
 * Safe fallback to last stable settings
@@ -116,7 +116,7 @@ The full remapping interface is already available, but **button switching and ha
 
 ---
 
-## 🏗️ Technical Highlights
+##  Technical Highlights
 
 This project was built as a **real low-level Windows systems project**, not just a UI wrapper.
 
@@ -143,7 +143,7 @@ This project was built as a **real low-level Windows systems project**, not just
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 * **Windows 10/11**
@@ -180,7 +180,7 @@ RazeLess currently supports the following Razer devices:
 
 ---
 
-## 🤝 Contributors Welcome
+##  Contributors Welcome
 
 One of the biggest planned upgrades is a **HyperShift-like secondary button layer**, inspired by the official Synapse workflow.
 
@@ -204,7 +204,7 @@ would be incredibly valuable to help build this feature.
 
 ---
 
-## 📌 Project Goals
+##  Project Goals
 
 This project is built around a simple principle:
 
@@ -224,7 +224,7 @@ Primary goals:
 
 ---
 
-## 🤝 Why this matters
+##  Why this matters
 
 This project represents something bigger than just replacing one vendor app.
 
