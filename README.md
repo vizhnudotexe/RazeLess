@@ -1,4 +1,4 @@
-# RazeLess 🖱️⚡
+# RazeLess 
 
 ### A lightweight, privacy-first manager for the Razer DeathAdder Essential (2021)
 
