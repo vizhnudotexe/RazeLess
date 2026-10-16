@@ -78,7 +78,7 @@ jobs:
           }
           "tag=$tag" >> $env:GITHUB_OUTPUT
 
-      - name: Attach EXE and ZIP to GitHub Release
+      - name: Attach standalone EXE to GitHub Release
         if: github.event_name == 'release' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') || inputs.release_tag != ''
         uses: softprops/action-gh-release@v2
         with:
@@ -86,6 +86,4 @@ jobs:
           target_commitish: ${{ github.sha }}
           name: RazeLess ${{ steps.release-tag.outputs.tag }}
           generate_release_notes: true
-          files: |
-            publish/DeathAdderManager2.exe
-            RazeLess-win-x64.zip
+          files: publish/DeathAdderManager2.exe
